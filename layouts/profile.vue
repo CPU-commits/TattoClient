@@ -1,0 +1,15 @@
+<template>
+	<section class="Profile">
+		<slot />
+	</section>
+</template>
+
+<style scoped>
+.Profile {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+}
+</style>

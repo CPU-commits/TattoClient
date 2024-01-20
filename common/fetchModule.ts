@@ -4,6 +4,7 @@
 import { v4 as uuidv4 } from 'uuid'
 // Types
 import type { FetchError } from 'ofetch'
+import { ZodError } from 'zod'
 import { capitalizeFirstLetter } from '~~/utils/format'
 
 enum HTTPMethods {
@@ -130,7 +131,15 @@ export class Fetch {
 	 */
 	handleError(error: unknown): ErrorFetch {
 		let errorFetch: ErrorFetch
-		if (this.isFetchError(error)) {
+		if (error instanceof ZodError) {
+			const message = error.errors.at(0).message
+
+			errorFetch = {
+				success: false,
+				message: capitalizeFirstLetter(message),
+				statusCode: 400,
+			}
+		} else if (this.isFetchError(error)) {
 			const message = error.data?.message ?? error.message
 			errorFetch = {
 				success: false,

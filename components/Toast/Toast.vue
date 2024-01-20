@@ -18,22 +18,20 @@ function emitDelete() {
 </script>
 
 <template>
-	<Transition>
-		<article :class="type" role="alert">
-			<i v-if="type === 'success'" class="fa-solid fa-circle-check" />
-			<i
-				v-else-if="type === 'error'"
-				class="fa-solid fa-circle-exclamation"
-			/>
-			<i v-else class="fa-solid fa-circle-info" />
-			<div class="text">
-				<slot />
-			</div>
-			<button v-if="dismissible" class="close" @click="emitDelete">
-				<i class="fa-solid fa-xmark" />
-			</button>
-		</article>
-	</Transition>
+	<article :class="type" role="alert">
+		<i v-if="type === 'success'" class="fa-solid fa-circle-check" />
+		<i
+			v-else-if="type === 'error'"
+			class="fa-solid fa-circle-exclamation"
+		/>
+		<i v-else class="fa-solid fa-circle-info" />
+		<div class="text">
+			<slot />
+		</div>
+		<button v-if="dismissible" class="close" @click="emitDelete">
+			<i class="fa-solid fa-xmark" />
+		</button>
+	</article>
 </template>
 
 <style scoped>

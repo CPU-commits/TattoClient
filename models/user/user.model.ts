@@ -1,3 +1,5 @@
+import type { OID } from '@/models/body.model'
+
 export enum UserTypes {
 	'a',
 	'b',
@@ -10,4 +12,12 @@ export enum UserTypesKeys {
 	TATTO = 'b',
 	STUDIO_OWNER = 'c',
 	ADMIN = 'd',
+}
+
+export type User = {
+	_id: OID
+	email: string
+	name: string
+	role: keyof typeof UserTypes
+	state: 'active'
 }

@@ -25,7 +25,7 @@ export default defineNuxtConfig({
 		typeCheck: true,
 	},
 	css: ['@/assets/scss/main.scss'],
-	modules: ['@pinia/nuxt', 'nuxt-security', 'nuxt-icon'],
+	modules: ['@pinia/nuxt', 'nuxt-security', '@nuxt/image'],
 	imports: {
 		dirs: ['stores'],
 	},
@@ -73,31 +73,6 @@ export default defineNuxtConfig({
 				context: 'nuxt:app',
 				labels: ['init', 'server', 'client'],
 			})
-		},
-	},
-	security: {
-		rateLimiter: {
-			value: {
-				tokensPerInterval: 150,
-				interval: 'hour',
-				fireImmediately: false,
-			},
-			route: '/**',
-		},
-		headers: {
-			contentSecurityPolicy: {
-				// img-src * 'self' data: https:
-				value: "base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src * 'self' data: https:;object-src 'none';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
-				route: '/**',
-			},
-			crossOriginEmbedderPolicy: {
-				value: 'unsafe-none',
-				route: '/**',
-			},
-		},
-		allowedMethodsRestricter: {
-			value: ['GET', 'POST', 'DELETE'],
-			route: '/**',
 		},
 	},
 })

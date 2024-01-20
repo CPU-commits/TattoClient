@@ -1,31 +1,30 @@
 import { defineStore } from 'pinia'
-import { DefaultResponse } from '~~/common/fetchModule'
+import type { BodyFetch } from '@/models/body.model'
 import { UserTypes } from '~~/models/user/user.model'
 import { formatUserType } from '~~/utils/format'
 
 type KeysUserTypes = keyof typeof UserTypes
 
 export interface AuthData {
-	access_token: string
+	token: string
 	user: {
-		_id: string
+		id: string
 		name: string
-		status: number
-		user_type: KeysUserTypes
+		role: KeysUserTypes
+		email: string
+		nickname: string
 	}
 }
 
-async function logIn(userForm: { rut: string; password: string }) {
+async function logIn(userForm: { email: string; password: string }) {
 	const { $fetchModule } = useNuxtApp()
 	try {
-		const dataFetch = await $fetchModule.fetchData<
-			AuthData & DefaultResponse
-		>({
+		const dataFetch = await $fetchModule.fetchData<BodyFetch<AuthData>>({
 			method: 'post',
-			URL: '/api/auth/login',
+			URL: '/api/v1/auth',
 			body: userForm,
 		})
-		return dataFetch
+		return dataFetch.body
 	} catch {
 		throw new Error('Credenciales inválidas')
 	}
@@ -49,20 +48,29 @@ const useAuthStore = defineStore('auth', {
 			return state.user
 		},
 		getToken(state): string | null {
-			return state.user?.access_token ?? null
+			return state.user?.token ?? null
 		},
 		getUserType(state): KeysUserTypes | null {
-			return state.user?.user.user_type ?? null
+			return state.user?.user.role ?? null
 		},
 		getName(state): string | null {
 			return state.user?.user.name ?? null
 		},
 		getID(state): string | null {
-			return state.user?.user._id ?? null
+			return state.user?.user.id ?? null
 		},
 		getUserTypeName(state) {
-			if (!state.user?.user.user_type) return ''
-			return formatUserType(state.user?.user.user_type)
+			if (!state.user?.user.role) return ''
+			return formatUserType(state.user?.user.role)
+		},
+		getNickname(state) {
+			return state.user.user.nickname
+		},
+		isOwnProfile(state) {
+			const nickname = useRoute().params.nickname
+			if (!nickname || typeof nickname === 'object') return false
+
+			return nickname === state.user.user.nickname
 		},
 	},
 	actions: {
@@ -70,13 +78,13 @@ const useAuthStore = defineStore('auth', {
 			this.isAuth = false
 			this.user = null
 		},
-		async logIn(userForm: { rut: string; password: string }) {
+		async logIn(userForm: { email: string; password: string }) {
 			const consent = useConsent()
 			if (consent.value) {
 				const dataFetch = await logIn(userForm)
 				await this.setAuth({
 					user: dataFetch.user,
-					access_token: dataFetch.access_token,
+					token: dataFetch.token,
 				})
 			} else {
 				useToastsStore().addToast({

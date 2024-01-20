@@ -30,7 +30,9 @@ watch(
 		<!-- Header -->
 		<MenuHeader />
 		<main>
-			<slot />
+			<div>
+				<slot />
+			</div>
 		</main>
 	</div>
 </template>
@@ -45,6 +47,6 @@ main {
 
 main div {
 	width: 100%;
-	max-width: 1600px;
+	max-width: 1000px;
 }
 </style>

@@ -1,0 +1,18 @@
+<script lang="ts" setup>
+defineProps<{
+	click: () => any
+}>()
+</script>
+
+<template>
+	<button class="InvisibleButton" type="button" @click="click">
+		<slot />
+	</button>
+</template>
+
+<style>
+.InvisibleButton {
+	border: none;
+	background-color: transparent;
+}
+</style>

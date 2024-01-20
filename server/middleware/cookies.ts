@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 import { setSession } from '../utils/cookies'
-import { Session } from '~/models/session/session'
+import type { Session } from '~/models/session/session'
 import { COOKIE_SESSION } from '~/common/cookies'
 
 export default defineEventHandler(async (event) => {

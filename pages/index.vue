@@ -5,15 +5,12 @@
 				<MainTitle />
 
 				<p>
-					Comunidad de tatuajes en Chile. Busca el tatuaje que mejor
-					se adapte a tu piel
+					<strong>Comunidad</strong> de tatuajes en Chile. Busca el
+					tatuaje que mejor se adapte a tu piel o lana...
 				</p>
 			</header>
 			<nav>
-				<HTMLAnchor href="/tatuadores">
-					<Icon name="icon-park-solid:english-mustache" size="30px" />
-					Tatuadores
-				</HTMLAnchor>
+				<HTMLAnchor href="/tatuadores"> Tatuadores </HTMLAnchor>
 				<HTMLAnchor href="/tatuadores" :primary="true">
 					Ir a buscar
 				</HTMLAnchor>
@@ -22,9 +19,9 @@
 	</section>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .Main {
-	margin-top: 80px;
+	margin-top: 30px;
 	display: flex;
 	flex-direction: column;
 }
@@ -50,6 +47,9 @@
 	}
 	path {
 		color: black;
+	}
+	strong {
+		color: var(--color-main);
 	}
 }
 </style>

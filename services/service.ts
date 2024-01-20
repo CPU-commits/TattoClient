@@ -1,13 +1,18 @@
-import { ConfigFetch, DefaultResponse, Fetch } from '~/common/fetchModule'
-import { Toast } from '~/models/toast/toast.model'
+import type { ConfigFetch, DefaultResponse, Fetch } from '~/common/fetchModule'
+import type { Toast } from '~/models/toast/toast.model'
 
 export abstract class Service {
 	private readonly fetchModule: Fetch
 	protected readonly authStore = useAuthStore()
 	private readonly toastsStore = useToastsStore()
+	private readonly router = useRouter()
 
 	constructor(fetch: Fetch) {
 		this.fetchModule = fetch
+	}
+
+	protected goto(href: string) {
+		this.router.push(href)
 	}
 
 	protected fetch<T = DefaultResponse>(
