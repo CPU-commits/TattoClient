@@ -10,13 +10,14 @@ export class ProfileService extends Service {
 		}).then(({ body }) => body)
 	}
 
-	async changeAvatar() {
+	async changeAvatar(file: File) {
 		const formData = new FormData()
+		formData.append('avatar', file)
 
-		return await this.fetch({
+		return await this.fetch<BodyFetch<string>>({
 			method: 'patch',
 			URL: '/api/v1/profiles/avatar',
 			body: formData,
-		})
+		}).then(({ body }) => body)
 	}
 }

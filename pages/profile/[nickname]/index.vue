@@ -3,6 +3,8 @@
 import type { Profile } from '@/models/profile/profile.model'
 // NuxtApp
 const { $profileService } = useNuxtApp()
+// Stores
+const authStore = useAuthStore()
 // Router
 const route = useRoute()
 
@@ -17,7 +19,11 @@ onBeforeMount(async () => {
 
 <template>
 	<NuxtLayout v-if="profile" name="profile">
-		<ProfileCarousel :tattos="[]" />
+		<ProfileCarousel
+			:nickname="nickname"
+			:tattos="[]"
+			:avatar="profile.avatar"
+		/>
 		<header class="Profile__header">
 			<div class="Profile__header--user">
 				<article class="Profile__header--specs">
@@ -33,7 +39,7 @@ onBeforeMount(async () => {
 				<small>@{{ profile.nickname }}</small>
 			</div>
 		</header>
-		<section class="Profile__inventory"></section>
+		<ProfilePublisher v-if="authStore.isOwnProfile" />
 		<section class="Profile__posts"></section>
 	</NuxtLayout>
 </template>
@@ -79,13 +85,5 @@ onBeforeMount(async () => {
 		color: var(--color-black);
 		font-size: 0.8rem;
 	}
-}
-
-.Profile__inventory {
-	position: relative;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	flex-direction: column;
 }
 </style>
