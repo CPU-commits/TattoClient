@@ -27,7 +27,7 @@ export default function (config: {
 						window.innerHeight)
 			}
 			if (
-				myPosition / elementScroll.scrollHeight >= 0.6 &&
+				myPosition / elementScroll.scrollHeight >= 0.4 &&
 				!running &&
 				count < config.total
 			) {
