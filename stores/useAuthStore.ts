@@ -70,7 +70,7 @@ const useAuthStore = defineStore('auth', {
 			const nickname = useRoute().params.nickname
 			if (!nickname || typeof nickname === 'object') return false
 
-			return nickname === state.user.user.nickname
+			return nickname === (state.user?.user?.nickname ?? '')
 		},
 	},
 	actions: {

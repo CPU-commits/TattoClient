@@ -25,7 +25,12 @@ export default defineNuxtConfig({
 		typeCheck: true,
 	},
 	css: ['@/assets/scss/main.scss'],
-	modules: ['@pinia/nuxt', 'nuxt-security', '@nuxt/image'],
+	modules: [
+		'@pinia/nuxt',
+		'nuxt-security',
+		'@nuxt/image',
+		'@samk-dev/nuxt-vcalendar',
+	],
 	imports: {
 		dirs: ['stores'],
 	},

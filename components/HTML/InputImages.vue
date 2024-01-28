@@ -2,6 +2,7 @@
 // Form
 const onClickFiles = ref(() => {})
 // Data
+const imagesFiles = ref<Array<File>>([])
 const images = ref<Array<string>>([])
 // Styles
 const onSide = ref(false)
@@ -9,10 +10,15 @@ const onSide = ref(false)
 // Emits
 const emit = defineEmits<{
 	(e: 'onClickFiles', v: () => void): void
+	(e: 'update:images', v: Array<File>): void
 }>()
 
 watch(onClickFiles, (newOnClickFiles) => {
 	emit('onClickFiles', newOnClickFiles)
+})
+
+watch(imagesFiles.value, (newImagesFiles) => {
+	emit('update:images', newImagesFiles)
 })
 
 function handleFiles(files: Array<File>) {
@@ -40,11 +46,14 @@ function addImage(file: File) {
 	reader.onload = () => {
 		// Image
 		images.value.push(reader.result as string)
+		// Update images
+		imagesFiles.value.push(file)
 	}
 }
 
 function deleteFile(index: number) {
 	images.value.splice(index, 1)
+	imagesFiles.value.splice(index, 1)
 }
 </script>
 

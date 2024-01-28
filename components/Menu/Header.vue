@@ -5,9 +5,9 @@ const authStore = useAuthStore()
 
 <template>
 	<header class="Header">
-		<i class="fa-solid fa-mountain-sun"></i>
+		<NuxtImg class="Header__logo" src="/logos/head.svg" />
 		<NuxtLink class="Header__title" to="/">
-			<h1>AlpacaTatto</h1>
+			<NuxtImg src="/logos/main.svg" />
 		</NuxtLink>
 
 		<div class="Header__icons">
@@ -37,11 +37,15 @@ const authStore = useAuthStore()
 .Header {
 	display: flex;
 	width: 100%;
-	padding: 10px;
+	padding: 20px;
 	justify-content: space-between;
 	font-size: 1.2rem;
 	align-items: center;
 	position: relative;
+}
+
+.Header__logo {
+	width: 50px;
 }
 
 .Header__title {
@@ -51,6 +55,9 @@ const authStore = useAuthStore()
 	text-decoration: none;
 	margin: 0 auto;
 	width: fit-content;
+	img {
+		width: 130px;
+	}
 }
 
 .Header__icons {

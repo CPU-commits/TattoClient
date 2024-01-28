@@ -11,3 +11,8 @@ export type OID = {
 export type $DATE = {
 	$date: number
 }
+
+export type QueryParams = {
+	page?: number
+	count?: boolean
+}

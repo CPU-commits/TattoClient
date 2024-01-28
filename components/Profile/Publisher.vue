@@ -1,10 +1,58 @@
 <script lang="ts" setup>
+// Types
+import type { Category } from '~/models/tattoo/category.model'
+// Categories
+const { categories } = defineProps<{
+	categories: Array<Category>
+}>()
+// NuxtApp
+const { $tattooService, $fetchModule } = useNuxtApp()
+// Stores
+const toastsStore = useToastsStore()
+// Modal
+const modalTag = ref(false)
+// Data
+const tattoos = ref<Array<File>>([])
 // Form
-const categories = ref<Array<string>>([])
+const categoriesData = ref<
+	Array<{
+		name: string
+		slug: string
+	}>
+>([])
+const filteredCategories = computed(() =>
+	categories.filter(
+		({ slug }) =>
+			!categoriesData.value.some((category) => category.slug === slug),
+	),
+)
 // Selected
 const selected = ref(0)
 // Funcs
 const onClickFiles = ref(() => {})
+
+async function uploadTattoos() {
+	try {
+		await $tattooService.uploadTattoos(
+			tattoos.value,
+			categoriesData.value.map(({ slug }) => slug),
+		)
+		// Clear
+		categoriesData.value = []
+		tattoos.value = []
+		selected.value = 0
+
+		toastsStore.addToast({
+			message: 'Se han subido los tatuajes exitosamente',
+			type: 'success',
+		})
+	} catch (err) {
+		toastsStore.addToast({
+			message: $fetchModule.handleError(err).message,
+			type: 'error',
+		})
+	}
+}
 </script>
 
 <template>
@@ -37,20 +85,35 @@ const onClickFiles = ref(() => {})
 			</footer>
 		</HTMLForm>
 		<!-- Tattoo -->
-		<HTMLForm v-if="selected === 1" :action="() => {}">
+		<HTMLForm v-if="selected === 1" :action="uploadTattoos">
 			<HTMLInputImages
+				v-model:images="tattoos"
 				@on-click-files="(onClick) => (onClickFiles = onClick)"
 			/>
 			<div class="Publisher__tags">
 				<i class="fa-solid fa-tags"></i>
-				<HTMLInvisibleButton :click="() => {}">
+				<HTMLInvisibleButton :click="() => (modalTag = true)">
 					<i class="fa-solid fa-plus"></i>
 				</HTMLInvisibleButton>
-				<small v-if="categories.length === 0">
+				<small v-if="categoriesData.length === 0">
 					<i>No hay etiquetas...</i>
 				</small>
-				<small v-for="(category, i) in categories" v-else :key="i">
-					{{ category }}
+				<small
+					v-for="(category, i) in categoriesData"
+					v-else
+					:key="i"
+					class="Publisher__tags--tag"
+				>
+					<HTMLInvisibleButton
+						:click="
+							() => {
+								categoriesData.splice(i, 1)
+							}
+						"
+					>
+						<i class="fa-solid fa-minus"></i>
+					</HTMLInvisibleButton>
+					{{ category.name }}
 				</small>
 			</div>
 			<footer class="Publisher__footer">
@@ -63,6 +126,26 @@ const onClickFiles = ref(() => {})
 				</HTMLButton>
 			</footer>
 		</HTMLForm>
+		<!-- Modal -->
+		<Modal v-model:opened="modalTag">
+			<template #title>
+				<h2>Etiquetas</h2>
+			</template>
+			<div class="Categories">
+				<HTMLInvisibleButton
+					v-for="category in filteredCategories"
+					:key="category._id.$oid"
+					:click="
+						() => {
+							categoriesData.push(category)
+						}
+					"
+				>
+					<i class="fa-solid fa-circle-plus"></i>
+					{{ category.name }}
+				</HTMLInvisibleButton>
+			</div>
+		</Modal>
 	</section>
 </template>
 
@@ -91,6 +174,7 @@ const onClickFiles = ref(() => {})
 .Publisher__tags {
 	display: flex;
 	gap: 15px;
+	align-items: center;
 	.fa-solid {
 		color: var(--color-main);
 	}
@@ -99,10 +183,35 @@ const onClickFiles = ref(() => {})
 		border-radius: 60%;
 		width: 16px;
 		height: 16px;
-		i {
-			color: white !important;
+		.fa-solid {
+			color: white;
 			font-size: 0.8rem;
 		}
+	}
+}
+
+.Publisher__tags--tag {
+	background-color: var(--color-main);
+	color: white;
+	border-radius: 5px;
+	padding: 2px 5px;
+	button {
+		background-color: transparent;
+	}
+}
+
+.Categories {
+	display: flex;
+	gap: 20px;
+	button {
+		background-color: var(--color-main);
+		i {
+			color: white;
+		}
+		color: white;
+		padding: 8px;
+		border-radius: 5px;
+		font-size: 1rem;
 	}
 }
 

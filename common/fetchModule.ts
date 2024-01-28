@@ -36,6 +36,7 @@ export interface ConfigFetch {
 }
 
 export type DefaultResponse = {
+	headers: Headers
 	success: boolean
 	message?: string
 }
@@ -193,6 +194,10 @@ export class Fetch {
 			onResponseError({ request, response }) {
 				// Log response
 				console.log('[fetch response error]', request, response.body)
+			},
+			onResponse({ response }) {
+				if (response._data && typeof response._data === 'object')
+					response._data.headers = response.headers
 			},
 			mode: 'cors',
 		})

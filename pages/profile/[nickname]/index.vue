@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 // Types
 import type { Profile } from '@/models/profile/profile.model'
+import type { Category } from '~/models/tattoo/category.model'
+import type { Tattoo } from '~/models/tattoo/tattoo.model'
 // NuxtApp
-const { $profileService } = useNuxtApp()
+const { $profileService, $categoryService, $tattooService } = useNuxtApp()
 // Stores
 const authStore = useAuthStore()
 // Router
@@ -11,9 +13,18 @@ const route = useRoute()
 const nickname = route.params.nickname as string
 // Data
 const profile = ref<Profile | null>(null)
+const categories = ref<Array<Category>>(null)
+const tattoos = ref<Array<Tattoo> | null>(null)
 
 onBeforeMount(async () => {
-	profile.value = await $profileService.getProfile(nickname)
+	const dataFetch = await Promise.all([
+		$profileService.getProfile(nickname),
+		$categoryService.getCategories(),
+		$tattooService.getLatestTattoosNickname(nickname),
+	])
+	profile.value = dataFetch[0]
+	categories.value = dataFetch[1]
+	tattoos.value = dataFetch[2]
 })
 </script>
 
@@ -21,9 +32,10 @@ onBeforeMount(async () => {
 	<NuxtLayout v-if="profile" name="profile">
 		<ProfileCarousel
 			:nickname="nickname"
-			:tattos="[]"
+			:tattoos="tattoos.map(({ image }) => image)"
 			:avatar="profile.avatar"
 		/>
+		<ProfileCalendar />
 		<header class="Profile__header">
 			<div class="Profile__header--user">
 				<article class="Profile__header--specs">
@@ -39,7 +51,10 @@ onBeforeMount(async () => {
 				<small>@{{ profile.nickname }}</small>
 			</div>
 		</header>
-		<ProfilePublisher v-if="authStore.isOwnProfile" />
+		<ProfilePublisher
+			v-if="authStore.isOwnProfile"
+			:categories="categories"
+		/>
 		<section class="Profile__posts"></section>
 	</NuxtLayout>
 </template>

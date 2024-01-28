@@ -4,7 +4,7 @@ import { UserTypesKeys } from '~/models/user/user.model'
 // Props
 const props = defineProps<{
 	nickname: string
-	tattos: Array<string>
+	tattoos: Array<string>
 	avatar?: string
 }>()
 // NuxtApp
@@ -17,8 +17,8 @@ const onClickInput = ref(() => {})
 // Data
 const avatarURL = ref(props.avatar)
 
-function getTatto(index: number) {
-	return props.tattos.at(index)
+function getTattoo(index: number) {
+	return props.tattoos.at(index)
 }
 
 function changeProfileImg() {
@@ -43,26 +43,27 @@ async function uploadProfileImg(files: Array<File>) {
 <template>
 	<section class="Carousel">
 		<div
-			v-for="tatto in 5"
-			:key="tatto"
+			v-for="tattoo in 5"
+			:key="tattoo"
 			class="Carousel__block"
 			:class="{
-				Main: tatto === 1,
-				CornetTop: tatto === 3,
-				CornetBottom: tatto === 5,
+				Main: tattoo === 1,
+				CornetTop: tattoo === 3,
+				CornetBottom: tattoo === 5,
 			}"
 		>
 			<NuxtImg
-				:src="getTatto(tatto - 1) ?? '/img/alpaca.jpg'"
+				:src="getTattoo(tattoo - 1) ?? '/img/alpaca.jpg'"
 				alt="Tatuaje"
 				:class="{
-					Main: tatto === 1,
-					CornetTop: tatto === 3,
-					CornetBottom: tatto === 5,
+					Main: tattoo === 1,
+					CornetTop: tattoo === 3,
+					CornetBottom: tattoo === 5,
 				}"
+				crossorigin="anonymous"
 			/>
 			<NuxtLink
-				v-if="tatto === 5"
+				v-if="tattoo === 5"
 				class="Carousel__gallery"
 				:to="`${nickname}/gallery`"
 			>
@@ -113,10 +114,12 @@ async function uploadProfileImg(files: Array<File>) {
 		'Main Main . .';
 	gap: 10px;
 	position: relative;
+	width: 100%;
 }
 
 .Carousel__block {
 	position: relative;
+	max-height: 160px;
 }
 
 img {
@@ -129,6 +132,7 @@ img {
 	grid-area: Main;
 	border-top-left-radius: 14px;
 	border-bottom-left-radius: 14px;
+	max-height: 330px;
 }
 
 .CornetTop {
