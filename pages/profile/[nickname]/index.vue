@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { Profile } from '@/models/profile/profile.model'
-
+import onScroll from '~/utils/onScroll'
+// NuxtApp
 const { $profileService, $postService } = useNuxtApp()
+const authStore = useAuthStore()
+
+// Router
 const route = useRoute()
 
 const nickname = route.params.nickname as string
@@ -45,7 +49,11 @@ onBeforeMount(async () => {
 
 <template>
 	<NuxtLayout v-if="profile" name="profile">
-		<ProfileCarousel :tattos="[]" />
+		<ProfileCarousel
+			:nickname="nickname"
+			:tattos="[]"
+			:avatar="profile.avatar"
+		/>
 		<header class="Profile__header">
 			<div class="Profile__header--user">
 				<article class="Profile__header--specs">
@@ -61,7 +69,7 @@ onBeforeMount(async () => {
 				<small>@{{ profile.nickname }}</small>
 			</div>
 		</header>
-		<section class="Profile__inventory">a</section>
+		<ProfilePublisher v-if="authStore.isOwnProfile" />
 		<section v-if="posts.length > 0" class="Profile__posts">
 			<ProfilePost
 				v-for="(item, index) in posts"

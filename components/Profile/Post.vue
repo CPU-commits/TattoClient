@@ -33,7 +33,7 @@ const props = defineProps<{
 	max-width: 500px;
 	display: flex;
 	flex-direction: column;
-	border-bottom: 1px solid var(--color-dark);
+	border-bottom: 1px solid var(--color-main);
 }
 small {
 	padding: 1rem 0;

@@ -30,3 +30,9 @@ h6 {
 	font-family: 'Karla', serif;
 	color: var(--color-main);
 }
+
+/* Modal */
+.Modal__open{
+    overflow-y: hidden !important;
+    overflow-x: hidden;
+}

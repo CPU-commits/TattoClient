@@ -25,10 +25,11 @@ defineProps<{
 button {
 	background-color: transparent;
 	border: none;
-	padding: 6px;
+	padding: 8px;
 	font-size: 0.8rem;
 	transition: all 0.3s;
 	position: relative;
+	border-radius: 8px;
 	border-bottom: 1px solid transparent;
 }
 
