@@ -1,12 +1,14 @@
-<script lang="ts" setup>
-// Types
+<script setup lang="ts">
 import type { Profile } from '@/models/profile/profile.model'
 import type { Category } from '~/models/tattoo/category.model'
 import type { Tattoo } from '~/models/tattoo/tattoo.model'
+import type { Post } from '~/models/post/post.model'
 // NuxtApp
-const { $profileService, $categoryService, $tattooService } = useNuxtApp()
+const { $profileService, $categoryService, $tattooService, $postService } =
+	useNuxtApp()
 // Stores
 const authStore = useAuthStore()
+
 // Router
 const route = useRoute()
 
@@ -15,17 +17,50 @@ const nickname = route.params.nickname as string
 const profile = ref<Profile | null>(null)
 const categories = ref<Array<Category>>(null)
 const tattoos = ref<Array<Tattoo> | null>(null)
+const posts = ref<Array<Post> | null>(null)
 
-onBeforeMount(async () => {
+onMounted(async () => {
 	const dataFetch = await Promise.all([
 		$profileService.getProfile(nickname),
 		$categoryService.getCategories(),
 		$tattooService.getLatestTattoosNickname(nickname),
+		getPost(true, 1),
 	])
 	profile.value = dataFetch[0]
 	categories.value = dataFetch[1]
 	tattoos.value = dataFetch[2]
+
+	// Set onscroll
+	onScroll({
+		countReturnedItems: 10,
+		total: dataFetch[3].total,
+		fx: async (page) => (await getPost(false, page + 1)).success,
+	})
 })
+
+async function getPost(count = false, page?: number) {
+	if (count) {
+		const dataFetch = await $postService.getPosts(nickname, {
+			page,
+			count,
+		})
+
+		posts.value = dataFetch.posts
+		return {
+			total: dataFetch.count,
+			success: true,
+		}
+	} else {
+		const { posts: postsData } = await $postService.getPosts(nickname, {
+			page,
+			count,
+		})
+		posts.value?.push(...postsData)
+	}
+	return {
+		success: true,
+	}
+}
 </script>
 
 <template>
@@ -55,7 +90,14 @@ onBeforeMount(async () => {
 			v-if="authStore.isOwnProfile"
 			:categories="categories"
 		/>
-		<section class="Profile__posts"></section>
+		<section v-if="posts" class="Profile__posts">
+			<ProfilePost
+				v-for="(post, index) in posts"
+				:key="index"
+				:post="post"
+			/>
+		</section>
+		<p v-else>No hay publicaciones.</p>
 	</NuxtLayout>
 </template>
 
@@ -100,5 +142,23 @@ onBeforeMount(async () => {
 		color: var(--color-black);
 		font-size: 0.8rem;
 	}
+}
+
+.Profile__inventory {
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+.Profile__posts {
+	position: relative;
+	width: 100%;
+	display: flex;
+	gap: 2rem;
+	padding: 1rem;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 </style>

@@ -3,6 +3,7 @@ import { Fetch } from '@/common/fetchModule'
 import { AuthService } from '@/services/auth.service'
 import { ProfileService } from '@/services/profile.service'
 import { CategoryService } from '~/services/category.service'
+import { PostService } from '@/services/post.service'
 import { TattooService } from '~/services/tatto.service'
 
 export default defineNuxtPlugin(() => {
@@ -12,6 +13,7 @@ export default defineNuxtPlugin(() => {
 			fetchModule: fetch,
 			authService: new AuthService(fetch),
 			profileService: new ProfileService(fetch),
+			postService: new PostService(fetch),
 			tattooService: new TattooService(fetch),
 			categoryService: new CategoryService(fetch),
 		},
