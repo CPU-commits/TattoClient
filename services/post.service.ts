@@ -3,10 +3,14 @@ import type { BodyFetch, QueryParams } from '@/models/body.model'
 import type { Post } from '@/models/post/post.model'
 
 export class PostService extends Service {
-	async postPost() {
-		return await this.fetch<BodyFetch<Post>>({
+	async uploadPost(content: string, images: Array<File>) {
+		const formData = new FormData()
+		formData.append('content', content)
+		images.forEach((images) => formData.append('files', images))
+		return await this.fetch({
 			method: 'post',
-			URL: `/api/v1/post/`,
+			URL: `/api/v1/posts`,
+			body: formData,
 		})
 	}
 

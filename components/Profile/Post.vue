@@ -9,17 +9,18 @@ defineProps<{
 <template>
 	<article class="Post">
 		<header class="Post__header">
-			<NuxtImg src="/img/alpaca.jpg" />
+			<NuxtImg src="/img/avatar.png" />
 			<div class="Post__text">
 				<small>{{ post.profile.user.name }}</small>
 				<p>{{ post.content }}</p>
 			</div>
 		</header>
-		<div class="Post__img">
+		<div v-if="post.images.length > 0" class="Post__img">
 			<NuxtImg
-				fit="fill"
+				fit="contain"
+				crossorigin="anonymous"
 				sizes="100vw sm:50vw md:400px"
-				src="/img/alpaca.jpg"
+				:src="post.images[0]"
 			/>
 		</div>
 		<footer class="Post__footer">
@@ -55,8 +56,10 @@ defineProps<{
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
 	img {
 		border-radius: 8px;
+		max-width: 60%;
 	}
 }
 

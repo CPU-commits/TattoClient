@@ -9,6 +9,7 @@ export type Post = {
 		avatar: string
 	}
 	content: string
+	images: Array<string>
 	likes: number
 	date: $DATE
 }

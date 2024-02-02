@@ -6,13 +6,14 @@ const { categories } = defineProps<{
 	categories: Array<Category>
 }>()
 // NuxtApp
-const { $tattooService, $fetchModule } = useNuxtApp()
+const { $tattooService, $fetchModule, $postService } = useNuxtApp()
 // Stores
 const toastsStore = useToastsStore()
 // Modal
 const modalTag = ref(false)
 // Data
 const tattoos = ref<Array<File>>([])
+const post = ref('')
 // Form
 const categoriesData = ref<
 	Array<{
@@ -53,6 +54,23 @@ async function uploadTattoos() {
 		})
 	}
 }
+async function uploadPost() {
+	try {
+		await $postService.uploadPost(post.value, tattoos.value)
+		post.value = ''
+		selected.value = 0
+
+		toastsStore.addToast({
+			message: 'Se ha subido el post con exito',
+			type: 'success',
+		})
+	} catch (err) {
+		toastsStore.addToast({
+			message: $fetchModule.handleError(err).message,
+			type: 'error',
+		})
+	}
+}
 </script>
 
 <template>
@@ -76,11 +94,25 @@ async function uploadTattoos() {
 			</button>
 		</header>
 		<!-- Publication -->
-		<HTMLForm v-if="selected === 0" :action="() => {}">
-			<HTMLTextArea placeholder="¿Qué vamos a publicar?" value="" />
+		<HTMLForm v-if="selected === 0" :action="uploadPost">
+			<HTMLTextArea
+				placeholder="¿Qué vamos a publicar?"
+				:value="post"
+				@update:value="(val) => (post = val)"
+			/>
+			<HTMLInputImages
+				v-model:images="tattoos"
+				:size="true"
+				@on-click-files="(onClick) => (onClickFiles = onClick)"
+			/>
+
 			<footer class="Publisher__footer">
 				<HTMLButton :with-background="true" type="submit">
 					Publicar
+				</HTMLButton>
+				<HTMLButton type="button" :click="onClickFiles">
+					<i class="fa-solid fa-file-circle-plus"></i>
+					Añadir
 				</HTMLButton>
 			</footer>
 		</HTMLForm>
