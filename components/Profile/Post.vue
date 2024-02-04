@@ -16,12 +16,7 @@ defineProps<{
 			</div>
 		</header>
 		<div v-if="post.images.length > 0" class="Post__img">
-			<NuxtImg
-				fit="contain"
-				crossorigin="anonymous"
-				sizes="100vw sm:50vw md:400px"
-				:src="post.images[0]"
-			/>
+			<CarouselBasic :images="post.images" />
 		</div>
 		<footer class="Post__footer">
 			<span><i class="fa-solid fa-heart"></i> {{ post.likes }}</span>
@@ -56,17 +51,15 @@ defineProps<{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-
-	img {
-		border-radius: 8px;
-		max-width: 60%;
-	}
+	height: 300px;
 }
 
 .Post__text {
 	padding: 0.5rem 0;
 	display: flex;
 	flex-direction: column;
+
+	min-height: 90px;
 	& p {
 		font-size: 0.9rem;
 		margin-top: 4px;

@@ -30,7 +30,9 @@ export default defineNuxtConfig({
 		'nuxt-security',
 		'@nuxt/image',
 		'@samk-dev/nuxt-vcalendar',
+		'vue3-carousel-nuxt',
 	],
+
 	imports: {
 		dirs: ['stores'],
 	},

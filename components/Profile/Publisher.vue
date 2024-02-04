@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 // Types
 import type { Category } from '~/models/tattoo/category.model'
+
 // Categories
 const { categories } = defineProps<{
 	categories: Array<Category>
@@ -59,6 +60,7 @@ async function uploadPost() {
 		await $postService.uploadPost(post.value, tattoos.value)
 		post.value = ''
 		selected.value = 0
+		tattoos.value = []
 
 		toastsStore.addToast({
 			message: 'Se ha subido el post con exito',
