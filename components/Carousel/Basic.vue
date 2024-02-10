@@ -35,7 +35,9 @@ defineProps<{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	max-width: 60%;
+	width: 100%;
+	object-fit: contain;
+	max-height: 295px;
 }
 
 .carousel__slide {
@@ -50,12 +52,14 @@ defineProps<{
 
 .carousel__next--disabled,
 .carousel__prev--disabled {
-	cursor: none;
-	opacity: 0;
+	display: none;
 }
 
 .carousel__icon:hover {
 	fill: var(--color-black);
+}
+.carousel__pagination {
+	margin: 0;
 }
 
 .carousel__pagination-button::after {

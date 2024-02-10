@@ -28,4 +28,27 @@ export class PostService extends Service {
 			count: parseInt(headers.get('X-Count')),
 		}))
 	}
+
+	async getPost(idPost: string) {
+		return await this.fetch<
+			BodyFetch<{
+				post: Post
+			}>
+		>({
+			method: 'get',
+			URL: `/api/v1/posts/post/${idPost}`,
+		}).then(({ body }) => ({
+			post: body.post,
+		}))
+	}
+
+	async likePost(idPost: string) {
+		const formData = new FormData()
+		formData.append('id_post', idPost)
+		return await this.fetch({
+			method: 'post',
+			URL: `/api/v1/posts/like`,
+			body: formData,
+		})
+	}
 }

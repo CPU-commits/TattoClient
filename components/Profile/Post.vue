@@ -1,8 +1,50 @@
 <script lang="ts" setup>
 import type { Post } from '~/models/post/post.model'
-
-defineProps<{
+import type { OID } from '~/models/body.model'
+import type { Profile } from '~/models/profile/profile.model'
+const params = defineProps<{
 	post: Post
+}>()
+const authStore = useAuthStore()
+const toastsStore = useToastsStore()
+
+const { $postService, $fetchModule, $profileService } = useNuxtApp()
+const isLiked = ref(false)
+const likes = ref<Array<OID>>(null)
+const user = ref<Profile | null>(null)
+
+function comparation(postId: OID, likesPost: Array<OID>) {
+	if (
+		likesPost.length > 0 &&
+		likesPost.some((like) => like.$oid === postId.$oid)
+	) {
+		isLiked.value = true
+	} else {
+		isLiked.value = false
+	}
+}
+onMounted(async () => {
+	user.value = await $profileService.getProfile(authStore.getNickname)
+	likes.value = Object.values(user.value.likes)
+	comparation(params.post._id, likes.value)
+})
+
+async function likePost() {
+	try {
+		await $postService.likePost(params.post._id.$oid)
+		emit('update:value', params.post._id.$oid)
+		user.value = await $profileService.getProfile(authStore.getNickname)
+		likes.value = Object.values(user.value.likes)
+		comparation(params.post._id, likes.value)
+	} catch (err) {
+		toastsStore.addToast({
+			message: $fetchModule.handleError(err).message,
+			type: 'error',
+		})
+	}
+}
+const emit = defineEmits<{
+	(e: 'update:value', value: string): void
 }>()
 </script>
 
@@ -19,12 +61,25 @@ defineProps<{
 			<CarouselBasic :images="post.images" />
 		</div>
 		<footer class="Post__footer">
-			<span><i class="fa-solid fa-heart"></i> {{ post.likes }}</span>
+			<span
+				><i
+					class="fa-solid fa-heart"
+					:class="{ isLiked: isLiked }"
+					@click="likePost"
+				></i>
+				{{ post.likes }}</span
+			>
 		</footer>
 	</article>
 </template>
 
 <style scoped>
+i {
+	cursor: pointer;
+}
+.isLiked {
+	color: red;
+}
 .Post {
 	box-sizing: border-box;
 	max-width: 500px;
@@ -51,7 +106,7 @@ defineProps<{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 300px;
+	height: 310px;
 }
 
 .Post__text {

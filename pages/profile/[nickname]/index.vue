@@ -18,7 +18,7 @@ const profile = ref<Profile | null>(null)
 const categories = ref<Array<Category>>(null)
 const tattoos = ref<Array<Tattoo> | null>(null)
 const posts = ref<Array<Post> | null>(null)
-
+// User
 onMounted(async () => {
 	const dataFetch = await Promise.all([
 		$profileService.getProfile(nickname),
@@ -26,6 +26,7 @@ onMounted(async () => {
 		$tattooService.getLatestTattoosNickname(nickname),
 		getPost(true, 1),
 	])
+
 	profile.value = dataFetch[0]
 	categories.value = dataFetch[1]
 	tattoos.value = dataFetch[2]
@@ -38,6 +39,14 @@ onMounted(async () => {
 	})
 })
 
+async function getOnePost(value: string) {
+	const data = await $postService.getPost(value)
+	const post = posts.value.find((p) => p._id.$oid === data.post._id.$oid)
+
+	if (post) {
+		post.likes = data.post.likes
+	}
+}
 async function getPost(count = false, page?: number) {
 	if (count) {
 		const dataFetch = await $postService.getPosts(nickname, {
@@ -95,6 +104,7 @@ async function getPost(count = false, page?: number) {
 				v-for="(post, index) in posts"
 				:key="index"
 				:post="post"
+				@update:value="getOnePost"
 			/>
 		</section>
 		<p v-else>No hay publicaciones.</p>
