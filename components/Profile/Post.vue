@@ -1,22 +1,21 @@
 <script lang="ts" setup>
 import type { Post } from '~/models/post/post.model'
 import type { OID } from '~/models/body.model'
-import type { Profile } from '~/models/profile/profile.model'
+import type { Like } from '~/models/like/like.model'
 const params = defineProps<{
 	post: Post
 }>()
-const authStore = useAuthStore()
+// const authStore = useAuthStore()
 const toastsStore = useToastsStore()
 
-const { $postService, $fetchModule, $profileService } = useNuxtApp()
+const { $postService, $fetchModule, $likeService } = useNuxtApp()
 const isLiked = ref(false)
-const likes = ref<Array<OID>>(null)
-const user = ref<Profile | null>(null)
+const likes = ref<Array<Like>>(null)
 
-function comparation(postId: OID, likesPost: Array<OID>) {
+function comparation(postId: OID, likesPost: Array<Like>) {
 	if (
 		likesPost.length > 0 &&
-		likesPost.some((like) => like.$oid === postId.$oid)
+		likesPost.some((like) => like.post.$oid === postId.$oid)
 	) {
 		isLiked.value = true
 	} else {
@@ -24,8 +23,7 @@ function comparation(postId: OID, likesPost: Array<OID>) {
 	}
 }
 onMounted(async () => {
-	user.value = await $profileService.getProfile(authStore.getNickname)
-	likes.value = Object.values(user.value.likes)
+	likes.value = await $likeService.getLike()
 	comparation(params.post._id, likes.value)
 })
 
@@ -33,8 +31,7 @@ async function likePost() {
 	try {
 		await $postService.likePost(params.post._id.$oid)
 		emit('update:value', params.post._id.$oid)
-		user.value = await $profileService.getProfile(authStore.getNickname)
-		likes.value = Object.values(user.value.likes)
+		likes.value = await $likeService.getLike()
 		comparation(params.post._id, likes.value)
 	} catch (err) {
 		toastsStore.addToast({
