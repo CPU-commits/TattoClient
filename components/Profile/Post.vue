@@ -60,7 +60,7 @@ const emit = defineEmits<{
 				<p>{{ post.content }}</p>
 			</div>
 		</header>
-		<div v-if="post.images.length > 0" class="Post__img">
+		<div v-if="post.images?.length > 0" class="Post__img">
 			<CarouselBasic :images="post.images" />
 		</div>
 		<footer class="Post__footer">
