@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+withDefaults(
+	defineProps<{
+		size: boolean
+	}>(),
+	{ size: false },
+)
+
 // Form
 const onClickFiles = ref(() => {})
 // Data
@@ -62,7 +69,7 @@ function deleteFile(index: number) {
 		<!-- Drag and drop -->
 		<div
 			class="InputImages__drag-drop"
-			:class="{ On: onSide }"
+			:class="{ On: onSide, small: size, normal: !size }"
 			@drop="(e) => addDroppedFiles(e)"
 			@dragover="
 				(e) => {
@@ -95,26 +102,38 @@ function deleteFile(index: number) {
 </template>
 
 <style scoped>
+i {
+	font-size: 2rem;
+}
+.normal {
+	min-height: 150px;
+	gap: 50px;
+	padding: 8px;
+	img {
+		width: 150px;
+		height: 150px;
+		object-fit: cover;
+		border-radius: 8px;
+	}
+}
+.small {
+	min-height: 75px;
+	gap: 25px;
+	padding: 4px;
+	img {
+		width: 75px;
+		height: 75px;
+		object-fit: cover;
+		border-radius: 8px;
+	}
+}
 .InputImages__drag-drop {
 	border: 3px dotted;
 	display: flex;
 	justify-content: center;
 	padding: 8px;
-	min-height: 150px;
 	align-items: center;
 	flex-wrap: wrap;
-	gap: 50px;
-}
-
-i {
-	font-size: 2rem;
-}
-
-img {
-	width: 150px;
-	height: 150px;
-	object-fit: cover;
-	border-radius: 8px;
 }
 
 .On {

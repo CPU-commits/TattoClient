@@ -6,6 +6,7 @@ import { CategoryService } from '~/services/category.service'
 import { PostService } from '@/services/post.service'
 import { TattooService } from '~/services/tatto.service'
 import { CalendarService } from '~/services/calendar.service'
+import { LikeService } from '~/services/like.service'
 
 export default defineNuxtPlugin(() => {
 	const fetch = new Fetch()
@@ -18,6 +19,7 @@ export default defineNuxtPlugin(() => {
 			tattooService: new TattooService(fetch),
 			categoryService: new CategoryService(fetch),
 			calendarService: new CalendarService(fetch),
+			likeService: new LikeService(fetch),
 		},
 	}
 })
