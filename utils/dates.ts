@@ -20,3 +20,11 @@ export function dateIsBefore(
 ): boolean {
 	return dayjs(dateOne).isBefore(dateTwo)
 }
+
+export function convertToTime(i: number) {
+	if (i <= 12)
+		if (i === 12) return i.toString() + ' PM'
+		else return i.toString() + ' AM'
+	else if (i === 24) return '12 AM'
+	else return (i - 12).toString() + ' PM'
+}

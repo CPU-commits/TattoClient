@@ -1,5 +1,6 @@
 <template>
 	<section class="CalendarPage">
+		<!--
 		<VCalendar
 			class="Calendar__calendar"
 			show-weeknumbers
@@ -8,6 +9,7 @@
 			:min-date="new Date()"
 			color="red"
 		/>
+		-->
 		<CalendarPrimary />
 	</section>
 </template>
