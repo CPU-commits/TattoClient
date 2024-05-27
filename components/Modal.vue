@@ -2,7 +2,6 @@
 // Types
 const props = defineProps<{
 	opened: boolean
-
 	fn?: () => any
 }>()
 
@@ -65,15 +64,15 @@ const closeModal = () => {
 
 <style scoped>
 .Modal {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	z-index: 1000;
+	z-index: 9999;
 	background: rgba(0, 0, 0, 0.4);
-	display: flex;
-	justify-content: center;
 	left: 0;
-	align-items: center;
 	top: var(--top);
 }
 
@@ -82,14 +81,15 @@ const closeModal = () => {
 }
 
 .Modal__container {
+	display: flex;
+	justify-content: center;
 	background-color: white;
-	max-height: 80%;
 	position: absolute;
 	top: 30px;
 	max-height: calc(100vh - 50px);
 	overflow-y: auto;
 	overflow-x: hidden;
-	width: 60%;
+	min-width: 20%;
 	border-radius: 4px;
 	animation: modal 0.4s;
 }

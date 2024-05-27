@@ -1,6 +1,6 @@
 import { Service } from './service'
 import type { BodyFetch, QueryParams } from '@/models/body.model'
-import type { Post } from '@/models/post/post.model'
+import type { Post, PostUpdate } from '@/models/post/post.model'
 
 export class PostService extends Service {
 	async uploadPost(content: string, images: Array<File>) {
@@ -49,6 +49,21 @@ export class PostService extends Service {
 			method: 'post',
 			URL: `/api/v1/posts/like`,
 			body: formData,
+		})
+	}
+
+	async deletePost(idPost: string) {
+		return await this.fetch({
+			method: 'delete',
+			URL: `/api/v1/posts/${idPost}`,
+		})
+	}
+
+	async updatePost(idPost: string, postUpdate: PostUpdate) {
+		return await this.fetch({
+			method: 'patch',
+			URL: `/api/v1/posts/${idPost}`,
+			body: postUpdate,
 		})
 	}
 }

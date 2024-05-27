@@ -45,6 +45,7 @@ async function getOnePost(value: string) {
 
 	if (post) {
 		post.likes = data.post.likes
+		post.is_visible = data.post.is_visible
 	}
 }
 async function getPost(count = false, page?: number) {
@@ -105,6 +106,7 @@ async function getPost(count = false, page?: number) {
 				:key="index"
 				:post="post"
 				@update:value="getOnePost"
+				@update:posts="getPost(true, 1)"
 			/>
 		</section>
 		<p v-else>No hay publicaciones.</p>

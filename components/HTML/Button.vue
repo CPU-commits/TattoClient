@@ -23,6 +23,7 @@ defineProps<{
 
 <style scoped lang="scss">
 button {
+	cursor: pointer;
 	background-color: transparent;
 	border: none;
 	padding: 8px;
