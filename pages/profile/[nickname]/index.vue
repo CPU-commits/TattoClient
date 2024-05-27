@@ -97,6 +97,7 @@ async function getPost(count = false, page?: number) {
 			</div>
 		</header>
 		<ProfilePublisher
+			@update:posts="getPost(true, 1)"
 			v-if="authStore.isOwnProfile"
 			:categories="categories"
 		/>

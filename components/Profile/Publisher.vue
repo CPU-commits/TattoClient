@@ -66,6 +66,7 @@ async function uploadPost() {
 			message: 'Se ha subido el post con exito',
 			type: 'success',
 		})
+		emit('update:posts')
 	} catch (err) {
 		toastsStore.addToast({
 			message: $fetchModule.handleError(err).message,
@@ -73,6 +74,10 @@ async function uploadPost() {
 		})
 	}
 }
+
+const emit = defineEmits<{
+	(e: 'update:posts'): void
+}>()
 </script>
 
 <template>
