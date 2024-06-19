@@ -3,7 +3,6 @@
 withDefaults(
 	defineProps<{
 		orientation: 'L' | 'R' | 'D' | 'T'
-		var?: Array<boolean>
 	}>(),
 	{
 		orientation: 'D',

@@ -59,14 +59,14 @@ async function uploadPost() {
 	try {
 		await $postService.uploadPost(post.value, tattoos.value)
 		post.value = ''
-		selected.value = 0
 		tattoos.value = []
+		selected.value = 0
 
+		emit('update:posts')
 		toastsStore.addToast({
 			message: 'Se ha subido el post con exito',
 			type: 'success',
 		})
-		emit('update:posts')
 	} catch (err) {
 		toastsStore.addToast({
 			message: $fetchModule.handleError(err).message,
@@ -74,7 +74,6 @@ async function uploadPost() {
 		})
 	}
 }
-
 const emit = defineEmits<{
 	(e: 'update:posts'): void
 }>()
@@ -257,8 +256,12 @@ const emit = defineEmits<{
 .Publisher__footer {
 	display: flex;
 	gap: 10px;
+	align-items: center;
 	i {
 		font-size: 1rem;
+	}
+	span {
+		cursor: pointer;
 	}
 }
 

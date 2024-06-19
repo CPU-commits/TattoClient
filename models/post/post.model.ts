@@ -13,10 +13,14 @@ export type Post = {
 	images?: Array<string>
 	likes: number
 	is_visible: boolean
+	position: number
 	date: $DATE
 }
 
 export type PostUpdate = {
 	content?: string
 	is_visible?: boolean
+	images?: Array<string>
+	position?: number
+	likes?: number
 }

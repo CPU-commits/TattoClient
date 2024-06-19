@@ -44,6 +44,7 @@
     "redis": "^4.6.12",
     "uuid": "^9.0.1",
     "vue": "^3.4.10",
+    "vue-draggable-next": "^2.2.1",
     "vue3-carousel-nuxt": "^1.1.0",
     "zod": "^3.22.4"
   }

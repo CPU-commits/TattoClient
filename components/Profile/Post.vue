@@ -4,6 +4,7 @@ import type { OID } from '~/models/body.model'
 import type { Like } from '~/models/like/like.model'
 const params = defineProps<{
 	post: Post
+	dragg: boolean
 }>()
 const authStore = useAuthStore()
 const toastsStore = useToastsStore()
@@ -126,7 +127,11 @@ function toggleDeletePost() {
 </script>
 
 <template>
-	<article v-if="post.is_visible || authStore.isOwnProfile" class="Post">
+	<article
+		v-if="post.is_visible || authStore.isOwnProfile"
+		class="Post"
+		:class="{ draggeable_on: dragg }"
+	>
 		<header class="Post__header">
 			<NuxtImg src="/img/avatar.png" />
 			<div class="Post__text">
@@ -140,11 +145,7 @@ function toggleDeletePost() {
 							<i class="fa-solid fa-check"> </i>
 						</button>
 					</small>
-					<DropDownBox
-						v-if="authStore.isOwnProfile"
-						:var="[editPostContent]"
-						orientation="L"
-					>
+					<DropDownBox v-if="authStore.isOwnProfile" orientation="L">
 						<span>
 							<i class="fa-solid fa-ellipsis-vertical"></i
 						></span>
@@ -211,6 +212,10 @@ function toggleDeletePost() {
 </template>
 
 <style scoped>
+.draggeable_on:active {
+	cursor: grabbing;
+	opacity: 0.4;
+}
 i {
 	cursor: pointer;
 }

@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { VueDraggableNext } from 'vue-draggable-next'
 import type { Profile } from '@/models/profile/profile.model'
 import type { Category } from '~/models/tattoo/category.model'
 import type { Tattoo } from '~/models/tattoo/tattoo.model'
 import type { Post } from '~/models/post/post.model'
+
 // NuxtApp
 const { $profileService, $categoryService, $tattooService, $postService } =
 	useNuxtApp()
@@ -18,6 +20,7 @@ const profile = ref<Profile | null>(null)
 const categories = ref<Array<Category>>(null)
 const tattoos = ref<Array<Tattoo> | null>(null)
 const posts = ref<Array<Post> | null>(null)
+const draggable = ref(false)
 // User
 onMounted(async () => {
 	const dataFetch = await Promise.all([
@@ -71,6 +74,27 @@ async function getPost(count = false, page?: number) {
 		success: true,
 	}
 }
+
+const toggleDD = () => {
+	if (draggable.value === true) {
+		getPost(true, 1)
+		draggable.value = false
+	} else {
+		draggable.value = !draggable.value
+	}
+}
+const cancelDD = () => {
+	getPost(true, 1)
+	draggable.value = false
+}
+async function acceptDD() {
+	try {
+		await $postService.updatePositionPost(nickname, posts.value)
+		draggable.value = false
+	} catch (e) {
+		console.log(e)
+	}
+}
 </script>
 
 <template>
@@ -80,6 +104,7 @@ async function getPost(count = false, page?: number) {
 			:tattoos="tattoos.map(({ image }) => image)"
 			:avatar="profile.avatar"
 		/>
+
 		<ProfileCalendar />
 		<header class="Profile__header">
 			<div class="Profile__header--user">
@@ -97,15 +122,42 @@ async function getPost(count = false, page?: number) {
 			</div>
 		</header>
 		<ProfilePublisher
-			@update:posts="getPost(true, 1)"
 			v-if="authStore.isOwnProfile"
 			:categories="categories"
+			@update:posts="getPost(true, 1)"
 		/>
-		<section v-if="posts" class="Profile__posts">
+		<span class="Profile__config-post"
+			><i class="fa-solid fa-sliders" @click="toggleDD"></i>
+			<div v-if="draggable">
+				<i class="fa-solid fa-check" @click="acceptDD"></i
+				><i class="fa-solid fa-xmark" @click="cancelDD"></i></div
+		></span>
+
+		<section
+			v-if="posts"
+			class="Profile__posts"
+			:class="{ Draggable_on: draggable }"
+		>
+			<VueDraggableNext
+				v-if="draggable"
+				v-model="posts"
+				class="VueDraggableNext"
+			>
+				<ProfilePost
+					v-for="(post, index) in posts"
+					:key="index"
+					:post="post"
+					:dragg="draggable"
+					@update:value="getOnePost"
+					@update:posts="getPost(true, 1)"
+				/>
+			</VueDraggableNext>
 			<ProfilePost
 				v-for="(post, index) in posts"
+				v-else
 				:key="index"
 				:post="post"
+				:dragg="draggable"
 				@update:value="getOnePost"
 				@update:posts="getPost(true, 1)"
 			/>
@@ -115,6 +167,20 @@ async function getPost(count = false, page?: number) {
 </template>
 
 <style scoped lang="scss">
+.Profile__config-post {
+	display: flex;
+	gap: 1rem;
+	& i {
+		cursor: pointer;
+	}
+	& i:hover {
+		color: var(--color-main);
+	}
+	div {
+		display: flex;
+		gap: 0.4rem;
+	}
+}
 .Profile__header {
 	display: flex;
 	width: 100%;
@@ -167,11 +233,23 @@ async function getPost(count = false, page?: number) {
 .Profile__posts {
 	position: relative;
 	width: 100%;
-	display: flex;
 	gap: 2rem;
+	display: flex;
 	padding: 1rem;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	& .VueDraggableNext {
+		display: inherit;
+		flex-direction: column;
+		gap: 2rem;
+		cursor: grab;
+	}
+}
+
+.Draggable_on {
+	border-radius: 14px;
+	width: 70%;
+	box-shadow: inset 0 0 0 1px var(--color-black);
 }
 </style>

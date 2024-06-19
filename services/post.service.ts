@@ -66,4 +66,14 @@ export class PostService extends Service {
 			body: postUpdate,
 		})
 	}
+
+	async updatePositionPost(nickname: string, posts: Array<Post>) {
+		const formData = new FormData()
+		posts.map((post) => formData.append('posts', JSON.stringify(post)))
+		return await this.fetch({
+			method: 'patch',
+			URL: `/api/v1/posts/pos/${nickname}`,
+			body: formData,
+		})
+	}
 }
